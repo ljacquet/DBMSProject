@@ -1,10 +1,11 @@
 ﻿using DBMSApi.Models;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DBMSApi
 {
-    public class DBMSContext : DbContext
+    public class DBMSContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<House> houses { get; set; }
         public DbSet<Ingredient> ingredients { get; set; }
@@ -29,11 +30,43 @@ namespace DBMSApi
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<RecipeIngredient>()
-                .HasKey(c => new { c.ingredientId, c.recipeId });
+            // Set up roomate ingredient connection
+            builder.Entity<Roomate>()
+                .HasMany(p => p.ingredients)
+                .WithMany(p => p.roomates)
+                .UsingEntity<RoomateIngredient>(
+                    j => j
+                        .HasOne(ri => ri.ingredient)
+                        .WithMany(i => i.roomateIngredients)
+                        .HasForeignKey(ri => ri.ingredientId),
+                    j => j
+                        .HasOne(ri => ri.roomate)
+                        .WithMany(r => r.roomateIngredients)
+                        .HasForeignKey(ri => ri.roomateId),
+                    j =>
+                    {
+                        j.HasKey(i => new { i.roomateId, i.ingredientId });
+                    }
+                );
 
-            builder.Entity<RoomateIngredient>()
-                .HasKey(c => new { c.roomateId, c.ingredientId });
+            // Set up recipe ingredient Connection
+            builder.Entity<Recipe>()
+                .HasMany(p => p.ingredients)
+                .WithMany(p => p.recipes)
+                .UsingEntity<RecipeIngredient>(
+                    j => j
+                        .HasOne(ri => ri.ingredient)
+                        .WithMany(i => i.recipeIngredients)
+                        .HasForeignKey(ri => ri.ingredientId),
+                    j => j
+                        .HasOne(ri => ri.recipe)
+                        .WithMany(r => r.recipeIngredients)
+                        .HasForeignKey(ri => ri.recipeId),
+                    j =>
+                    {
+                        j.HasKey(i => new { i.recipeId, i.ingredientId });
+                    }
+                );
         }
     }
 }

@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    background-color: #282a36;
+}
+
+.toolbar {
+    min-height: 5vh;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.centeredContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

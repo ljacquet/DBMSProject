@@ -1,9 +1,11 @@
 ﻿using DBMSApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DBMSApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("/api/house")]
     public class HomeController : ControllerBase
     {

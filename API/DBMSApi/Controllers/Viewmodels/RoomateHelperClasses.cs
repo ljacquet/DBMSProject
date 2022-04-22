@@ -2,8 +2,7 @@
 {
     public class CreateRoomateViewModel
     {
-        public string fName { get; set; }
-        public string lName { get; set; }
+        public string username { get; set; }
         public int? houseId { get; set; }
     }
 

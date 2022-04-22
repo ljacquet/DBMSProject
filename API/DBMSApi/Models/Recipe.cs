@@ -7,6 +7,7 @@
         public string link { get; set; }
         public string description { get; set; }
 
-        public virtual ICollection<RecipeIngredient> ingredients { get; set; }
+        public virtual ICollection<Ingredient> ingredients { get; set; }
+        public virtual List<RecipeIngredient> recipeIngredients { get; set; }
     }
 }

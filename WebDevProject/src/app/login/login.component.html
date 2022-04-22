@@ -1,0 +1,13 @@
+<div class="text-center w-100 centeredContent loginContainer">
+    <div class="card loginForm">
+        <h2 class="text-primary m-3">MyKitchen</h2>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username" #username>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="password" class="form-control" placeholder="Password" aria-label="Password" #password>
+        </div>
+        <button class="btn btn-primary w-100 mb-2" (click)="signIn(username.value, password.value)">Login</button>
+        <button class="btn btn-secondary w-100 mb-2" routerLink="/register">Create an Account!</button>
+    </div>
+</div>

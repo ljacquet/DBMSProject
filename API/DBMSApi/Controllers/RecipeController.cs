@@ -1,5 +1,6 @@
 ﻿using DBMSApi.Controllers.Viewmodels;
 using DBMSApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DBMSApi.Controllers
 {
     [Route("api/admin/[controller]")]
+    [Authorize]
     [ApiController]
     public class RecipeController : ControllerBase
     {
@@ -145,7 +147,7 @@ namespace DBMSApi.Controllers
             }
 
             // Find recipe ingredients
-            foreach (var ingredient in recipe.ingredients)
+            foreach (var ingredient in recipe.recipeIngredients)
             {
                 _db.recipeIngredients.Remove(ingredient);
             }

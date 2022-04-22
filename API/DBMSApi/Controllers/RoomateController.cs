@@ -1,10 +1,12 @@
 ﻿using DBMSApi.Controllers.Viewmodels;
 using DBMSApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DBMSApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("/api/roomate")]
     public class RoomateController : ControllerBase
     {
@@ -33,8 +35,7 @@ namespace DBMSApi.Controllers
 
             var roomate = new Roomate()
             {
-                fName = data.fName,
-                lName = data.lName,
+                username = data.username,
                 isOwner = false,
                 houseId = data.houseId
             };

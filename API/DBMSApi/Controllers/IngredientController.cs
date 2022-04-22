@@ -1,11 +1,13 @@
 ﻿using DBMSApi.Controllers.Viewmodels;
 using DBMSApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DBMSApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("/api/admin/ingredient")]
     public class IngredientController : ControllerBase
     {
