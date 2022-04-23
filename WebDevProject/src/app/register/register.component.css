@@ -1,0 +1,12 @@
+.loginForm {
+    min-width: 330px;
+    padding: 5px;
+}
+
+.loginContainer {
+    height: 50vh;
+}
+
+input {
+    width: 100%;
+}

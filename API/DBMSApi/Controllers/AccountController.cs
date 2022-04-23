@@ -38,7 +38,7 @@ namespace DBMSApi.Controllers
         {
             var userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return BadRequest("User already exists!");
+                return BadRequest(new { success = true, message = "User already exists!" });
 
             ApplicationUser user = new ApplicationUser()
             {
@@ -57,11 +57,11 @@ namespace DBMSApi.Controllers
 
             if (!result.Succeeded)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "User creation failed! Please check user details and try again.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "User creation failed! Please check user details and try again." });
             }
 
             await db.SaveChangesAsync();
-            return Ok("User created successfully!");
+            return Ok(new { success = true, message = "User created successfully!" }); ;
         }
 
         [HttpPost]

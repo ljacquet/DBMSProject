@@ -1,5 +1,6 @@
 ﻿using DBMSApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DBMSApi.Controllers
@@ -10,9 +11,13 @@ namespace DBMSApi.Controllers
     public class HomeController : ControllerBase
     {
         DBMSContext dbmsContext;
-        public HomeController(DBMSContext db)
+        private readonly UserManager<ApplicationUser> userManager;
+
+        public HomeController(DBMSContext db, UserManager<ApplicationUser> userManager)
         {
             dbmsContext = db;
+            this.userManager = userManager;
+
         }
 
         /// <summary>
@@ -20,10 +25,22 @@ namespace DBMSApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<House> Index()
+        public async Task<List<House>> Index()
         {
             return dbmsContext.houses.ToList();
         }
+
+        [HttpGet("myhouse")]
+        public async Task<House> myHouse()
+        {
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return null;
+
+            return user.roomate.house;
+        }
+        
 
         /// <summary>
         /// Creates house and assigns it to user

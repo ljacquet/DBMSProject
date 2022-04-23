@@ -7,21 +7,27 @@ import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   {
-    path: 'login', component: LoginComponent
+    path: 'login',
+    component: LoginComponent,
   },
   {
-    path: 'register', component: RegisterComponent
+    path: 'register',
+    component: RegisterComponent,
   },
   {
-    path: 'home', component: HouseComponent, canActivate: [GlobalguardGuard] // bit of a naming error... 
+    path: 'home',
+    component: HouseComponent,
+    canActivate: [GlobalguardGuard], // bit of a naming error...
   },
   {
-    path: '', redirectTo: '/home', pathMatch: 'full'
-  }
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

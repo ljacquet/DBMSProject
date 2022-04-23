@@ -4,16 +4,18 @@ import { ApiService } from '../api.service';
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
-  styleUrls: ['./authentication.component.css']
+  styleUrls: ['./authentication.component.css'],
 })
 export class AuthenticationComponent implements OnInit {
+  constructor(private api: ApiService) {}
 
-  constructor(private api: ApiService) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   loggedIn(): boolean {
     return this.api.isLoggedIn();
+  }
+
+  getUsername(): string {
+    return this.api.username;
   }
 }
