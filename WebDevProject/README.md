@@ -28,6 +28,8 @@ If the ID isn't working you should be able to see it by logging into either othe
 
 3 different recipes are created 2 that can already be made with the ingredients available. The third requires someone to add Test Ingredient 3 to themselves to be made.  
 
+If the database gets messed up your best shot at fixing it is probably to go to %localappdata% and delete DBMS.db. You can then rerun update-database and it will be rebuilt.
+
 ## Notes  
 The website does not have as much error correction as I would like, I'm running very short on time to do this and grade for my TA so this will have to do. As long as the server is running you shouldn't run into any issues. If things are acting strangely the issue should be fairly obvious by looking in the console I've added excessive logging.  
 
