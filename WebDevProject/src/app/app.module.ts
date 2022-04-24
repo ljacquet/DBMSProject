@@ -14,6 +14,7 @@ import { IngredientsComponent } from './ingredients/ingredients.component';
 import { MyingredientsComponent } from './myingredients/myingredients.component';
 import { RecipesComponent } from './recipes/recipes.component';
 import { EditRecipeComponent } from './edit-recipe/edit-recipe.component';
+import { TestingComponent } from './testing/testing.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { EditRecipeComponent } from './edit-recipe/edit-recipe.component';
     IngredientsComponent,
     MyingredientsComponent,
     RecipesComponent,
-    EditRecipeComponent
+    EditRecipeComponent,
+    TestingComponent
   ],
   imports: [
     BrowserModule,

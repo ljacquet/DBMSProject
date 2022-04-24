@@ -69,7 +69,7 @@ export class EditRecipeComponent implements OnInit {
   }
 
   async addIngredient(ingredientId: string, amount: string, amountUnit: string) {
-    let resp = await this.api.addRecipeIngredient(this.recipeId, Number.parseInt(ingredientId), amount, amountUnit);
+    let resp = await this.api.addRecipeIngredient(this.recipeId, Number.parseInt(ingredientId), Number.parseFloat(amount), amountUnit);
 
     if (resp) {
       this.loadRecipe();

@@ -88,11 +88,14 @@ export class ApiService {
     return this.token != null && new Date(this.token.expiration) > new Date();
   }
 
-  signOut() {
+  signOut(redirect = true) {
     this.token = null;
     localStorage.removeItem('jwt');
 
-    this.router.navigate(['login']);
+    // Added so we can logout without redirecting
+    if (redirect) {
+      this.router.navigate(['login']);
+    }
   }
 
   trySignIn(username: string, password: string) {
@@ -437,7 +440,7 @@ export class ApiService {
     })
   }
 
-  addRecipeIngredient(recipeId: number, ingredientId: number, amount: string, amountUnit: string) {
+  addRecipeIngredient(recipeId: number, ingredientId: number, amount: number, amountUnit: string) {
     return new Promise(async (resolve, reject) => {
       let resp = await this.postAPIRequest('/api/recipe/addingredient/' + recipeId, {
         ingredientId, amount, unit: amountUnit

@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { MyingredientsComponent } from './myingredients/myingredients.component';
 import { RecipesComponent } from './recipes/recipes.component';
 import { RegisterComponent } from './register/register.component';
+import { TestingComponent } from './testing/testing.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,10 @@ const routes: Routes = [
     path: 'recipe/:id',
     component: EditRecipeComponent,
     canActivate: [GlobalguardGuard]
+  },
+  {
+    path: 'testing',
+    component: TestingComponent
   },
   {
     path: '',
