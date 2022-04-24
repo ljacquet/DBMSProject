@@ -6,6 +6,4 @@ You will need visual studio 2022 to build the API (later versions may work I jus
 
 Front end buildable through npm and built using angular
 
-## Building
-I recommend downloading visual studio 2022 and using that to open the project. I'll try to include an exe that you can run as well.
-
+# Detailed Run Instructions available within /WebDevProject readme
