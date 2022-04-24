@@ -9,10 +9,15 @@
     public class AddIngredientRoomateViewModel
     {
         public int ingredientId { get; set; }
-        public int amount { get; set; }
+        public double amount { get; set; }
         public string amountUnit { get; set; }
         public double? price { get; set; }
-        public string? priceUnit { get; set; }
-        public DateTime expiredDate { get; set; }
+    }
+
+    public class UpdateIngredientRoomateModel
+    {
+        public double amount { get; set; }
+        public string amountUnit { get; set; }
+        public double? price { get; set; }
     }
 }

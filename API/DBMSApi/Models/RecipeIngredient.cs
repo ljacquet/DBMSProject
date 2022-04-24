@@ -11,7 +11,7 @@ namespace DBMSApi.Models
         public double ingredientAmount { get; set; }
         public string ingredientUnit { get; set; }
 
-        public virtual Recipe recipe { get; set; }
-        public virtual Ingredient ingredient { get; set; }
+        public Recipe recipe { get; set; }
+        public Ingredient ingredient { get; set; }
     }
 }

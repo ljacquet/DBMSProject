@@ -1,0 +1,59 @@
+<div class="col-12 mt-5">
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="text-primary">Ingredients</h2>
+          <div *ngFor="let ingredient of ingredients">
+              <h4 class="text-secondary">{{ ingredient.ingredientName }}</h4>
+            <div class="text-dark">
+                <span>Amount: {{ ingredient.quantity }} {{ ingredient.quantityUnit }}</span><br>
+                <span>Price: {{ ingredient.price }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h2 class="text-primary">Edit Ingredient</h2>
+            <div *ngIf="ingredients.length > 0; else noIngredients" class="mb-3">
+                <select class="form-select w-100 mb-3" #editIngredientSelector>
+                    <option [value]="ingredient.ingredientId" *ngFor="let ingredient of ingredients">{{ingredient.ingredientName}}</option>
+                </select>
+                <input type="number" placeholder="Amount" class="form-control mb-3" #editIngredientA>
+                <input type="text" placeholder="Unit" class="form-control mb-3" #editIngredientU>
+                <input type="number" placeholder="Price" class="form-control mb-3" #editIngredientP>
+                <button class="btn btn-primary btn-block" (click)="updateIngredient(editIngredientSelector.value, editIngredientA.value, editIngredientU.value, editIngredientP.value)">Update Ingredient</button>
+                <button class="btn btn-danger btn-block" (click)="deleteIngredient(editIngredientSelector.value)">Remove Ingredient</button>
+            </div>
+            <ng-template #noIngredients>
+                <span class="text-danger">You have no ingredients</span>
+            </ng-template>
+
+
+            <h2 class="text-primary">Add Ingredient</h2>
+            <select class="form-select w-100 mb-3" #addIngredientSelector>
+                <option [value]="ingredient.ingredientId" *ngFor="let ingredient of validIngredients">{{ingredient.ingredientName}}</option>
+            </select>
+            <input type="number" placeholder="Amount" class="form-control mb-3" #addIngredientA>
+            <input type="text" placeholder="Unit" class="form-control mb-3" #addIngredientU>
+            <input type="number" placeholder="Price" class="form-control mb-3" #addIngredientP>
+            <button class="btn btn-primary btn-block" (click)="addIngredient(addIngredientSelector.value, addIngredientA.value, addIngredientU.value, addIngredientP.value)">Add Ingredient</button>
+          </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-primary mb-3">Create / Delete Ingredient Types</h2>
+                <input class="form-control mb-2" placeholder="Ingredient Name" #createIngredientTypeN>
+                <button class="btn btn-primary btn-block mb-3" (click)="createIngredientType(createIngredientTypeN.value)">Create Ingredient</button>
+                <div *ngFor="let ingredient of ingredientTypes" class="text-dark m-3">
+                    <h4>{{ingredient.ingredientName}} - ID: {{ingredient.ingredientId}}</h4>
+                    <button class="btn btn-block btn-danger" (click)="deleteIngredientType(ingredient.ingredientId)">Delete Ingredient</button>
+                </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>

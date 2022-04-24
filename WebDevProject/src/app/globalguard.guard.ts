@@ -26,7 +26,7 @@ export class GlobalguardGuard implements CanActivate {
     if (this.api.isLoggedIn()) {
       return true;
     } else {
-      this.router.navigate(['login']);
+      this.api.signOut();
       return false;
     }
   }

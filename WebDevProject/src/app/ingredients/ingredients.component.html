@@ -1,0 +1,12 @@
+<div class="col-12 mt-5">
+    <div class="card" *ngIf="roomate != null">
+        <div class="card-body">
+            <h2 class="text-primary border-bottom mb-3">{{roomate.username}} Ingredients</h2>
+
+            <div *ngFor="let ingredient of ingredients">
+                <h3 class="text-secondary">{{ ingredient.ingredientName }} - ${{ ingredient.price }}</h3>
+                <p class="text-dark">{{ ingredient.quantity }} {{ ingredient.quantityUnit }}</p>
+            </div>
+        </div>
+    </div>
+</div>

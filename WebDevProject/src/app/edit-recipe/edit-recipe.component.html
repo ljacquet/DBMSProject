@@ -1,0 +1,36 @@
+<div class="col-12 mt-5" *ngIf="recipe != null">
+  <div class="card mb-3">
+    <div class="card-body">
+      <h2 class="text-primary">Editing {{ recipe.recipeName }}</h2>
+      <p class="text-dark">{{ recipe.description }}</p>
+
+      <input type="text" class="form-control mb-3" placeholder="New Name" #changeRecipeN>
+      <input type="text" class="form-control mb-3" placeholder="New Description" #changeRecipeD>
+      <button class="btn btn-primary btn-block" (click)="updateRecipe(changeRecipeN.value, changeRecipeD.value)">Change Name and Description</button>
+    </div>
+  </div>
+
+  <div class="card">
+      <div class="card-body">
+          <h2 class="text-primary">Ingredients</h2>
+
+          <div *ngIf="validIngredients.length > 0">
+            <select class="form-select w-100 mb-3" #addIngredientS>
+                <option [value]="ingredient.ingredientId" *ngFor="let ingredient of validIngredients">{{ingredient.ingredientName}}</option>
+            </select>
+    
+            <input type="number" placeholder="Amount" class="form-control mb-3" #addIngredientA>
+            <input type="text" placeholder="Amount Unit" class="form-control mb-3" #addIngredientU>
+    
+            <button class="btn btn-primary btn-block mb-5" (click)="addIngredient(addIngredientS.value, addIngredientA.value, addIngredientU.value)">Add Ingredient</button>
+          </div>
+        
+
+        <div *ngFor="let ingredient of recipe.ingredients">
+            <h3 class="text-secondary">{{ingredient.ingredientName}}</h3>
+            <p class="text-dark ml-2">{{ ingredient.ingredientAmount }} {{ ingredient.ingredientUnit }}</p>
+            <button class="btn btn-danger btn-block" (click)="deleteIngredient(ingredient.ingredientId)">Delete Ingredient</button>
+        </div>
+      </div>
+  </div>
+</div>

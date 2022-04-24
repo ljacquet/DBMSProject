@@ -1,3 +1,4 @@
 <ng-container *ngIf="loggedIn()">
-  <span>Welcome {{ this.getUsername() }}</span>
+  <span class="mr-2">Welcome {{ this.getUsername() }}</span>
+  <button class="btn btn-danger" (click)="signOut()">Sign Out</button>
 </ng-container>

@@ -3,6 +3,7 @@ using System;
 using DBMSApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBMSApi.Migrations
 {
     [DbContext(typeof(DBMSContext))]
-    partial class DBMSContextModelSnapshot : ModelSnapshot
+    [Migration("20220423214413_removedExcessAttributes")]
+    partial class removedExcessAttributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -126,6 +128,10 @@ namespace DBMSApi.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("link")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

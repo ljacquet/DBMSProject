@@ -1,1 +1,83 @@
-<div class="houseContainer"></div>
+<div class="col-12" *ngIf="house != null; else createJoinHouse">
+    <div class="row">
+        <div class="col-12 mt-5">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="text-primary mb-2">{{house.houseName}} - Join Code: {{house.houseId}}</h2>
+                    <button class="btn btn-secondary btn-block" routerLink="/ingredients">Edit Your Ingredients</button>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="text-primary mb-2">Roomates</h2>
+                    <div *ngFor="let roomate of roomates" class="row mb-2">
+                        <div class="col-8">
+                            <h4 class="text-dark mb-2">{{roomate.username}}<span *ngIf="roomate.isOwner"> - Owner</span></h4>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-outline-secondary btn-block" [routerLink]="['/ingredients', roomate.roomateId]">View Ingredients</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="text-primary">House Ingredients</h2>
+                    <div *ngFor="let ingredient of ingredients" class="row text-center">
+                        <div class="col-12 border-bottom mb-3">
+                            <h4 class="text-secondary text-left ml-1">{{ ingredient.ingredientName }}</h4>
+                        </div>
+                        <div class="col-4">
+                            <span class="text-dark">Owner: {{ ingredient.ownerName }}</span>
+                        </div>
+                        <div class="col-4">
+                            <span class="text-dark">Amount: {{ ingredient.quantity }} {{ ingredient.quantityUnit }}</span>
+                        </div>
+                        <div class="col-4">
+                            <span class="text-dark">Price: ${{ ingredient.price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-primary">Possible Recipes</h2>
+                    <div *ngFor="let possibleRecipe of possibleRecipes">
+                        <h4 class="text-secondary">{{possibleRecipe.recipeName}}</h4>
+                        <p class="text-dark">{{possibleRecipe.recipeDescription}}</p>
+                        <button class="btn btn-primary btn-block" [routerLink]="['/recipe', possibleRecipe.recipeId]">View Recipe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #createJoinHouse>
+    <div class="col-12 mt-5">
+        <div class="row">
+            <div class="col-6 text-primary">
+                <div class="card m-2">
+                    <div class="card-body">
+                        <h2>Create a house</h2>
+                        <input type="text" class="form-control mb-2" placeholder="House Name" aria-label="HouseName" #houseName>
+                        <button class="btn btn-primary btn-block" (click)="createHouse(houseName.value)">Create House</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 text-primary">
+                <div class="card m-2">
+                    <div class="card-body">
+                        <h2>Join a house</h2>
+                        <input type="number" class="form-control mb-2" placeholder="House ID" aria-label="HouseID" #houseId>
+                        <button class="btn btn-primary btn-block" (click)="joinHouse(houseId.value)">Join House</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+

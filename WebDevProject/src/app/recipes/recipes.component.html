@@ -1,0 +1,23 @@
+<div class="col-12 mt-5">
+  <div class="card mb-3">
+    <div class="card-body">
+      <h2 class="text-primary border-bottom mb-3">Recipes</h2>
+      <input type="text" class="form-control mb-2" placeholder="Recipe Name" #rname />
+      <input type="text" class="form-control mb-2" placeholder="Description" #rdescription />
+      <button class="btn btn-primary btn-block" (click)="newRecipe(rname.value, rdescription.value)">
+        Create New Recipe
+      </button>
+    </div>
+  </div>
+
+  <div class="card mb-2" *ngFor="let recipe of recipes">
+      <div class="card-body">
+        <h3 class="text-primary">
+            {{ recipe.recipeName }}
+        </h3>
+        <p class="text-dark mb-2">{{ recipe.description }}</p>
+        <button class="btn btn-primary btn-block" [routerLink]="['/recipe', recipe.recipeId]">Edit Recipe</button>
+        <button class="btn btn-danger btn-block" (click)="deleteRecipe(recipe.recipeId)">Delete Recipe</button>
+      </div>
+  </div>
+</div>

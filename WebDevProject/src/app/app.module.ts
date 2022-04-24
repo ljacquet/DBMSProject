@@ -10,6 +10,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { IngredientsComponent } from './ingredients/ingredients.component';
+import { MyingredientsComponent } from './myingredients/myingredients.component';
+import { RecipesComponent } from './recipes/recipes.component';
+import { EditRecipeComponent } from './edit-recipe/edit-recipe.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +21,11 @@ import { RegisterComponent } from './register/register.component';
     AuthenticationComponent,
     HouseComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    IngredientsComponent,
+    MyingredientsComponent,
+    RecipesComponent,
+    EditRecipeComponent
   ],
   imports: [
     BrowserModule,

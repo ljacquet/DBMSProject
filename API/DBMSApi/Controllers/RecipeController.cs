@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DBMSApi.Controllers
 {
-    [Route("api/admin/[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     [ApiController]
     public class RecipeController : ControllerBase
@@ -20,9 +20,21 @@ namespace DBMSApi.Controllers
 
         // GET: api/<RecipeController>
         [HttpGet]
-        public IEnumerable<Recipe> Get()
+        public IEnumerable<RecipeResponseModel> Get()
         {
-            return _db.recipes.ToList();
+            var recipes = _db.recipes.ToList();
+
+            var recipesResponse = new List<RecipeResponseModel>();
+
+            foreach (var recipe in recipes)
+            {
+                _db.Entry(recipe).Collection(x => x.recipeIngredients).Load();
+                _db.Entry(recipe).Collection(x => x.ingredients).Load();
+
+                recipesResponse.Add(RecipeResponseModel.recipeResponseBuilder(recipe));
+            }
+
+            return recipesResponse;
         }
 
         // GET api/<RecipeController>/5
@@ -34,7 +46,10 @@ namespace DBMSApi.Controllers
             if (recipe == null)
                 return NotFound();
 
-            return Ok(recipe);
+            _db.Entry(recipe).Collection(x => x.recipeIngredients).Load();
+            _db.Entry(recipe).Collection(x => x.ingredients).Load();
+
+            return Ok(RecipeResponseModel.recipeResponseBuilder(recipe));
         }
 
         // POST api/<RecipeController>
@@ -44,36 +59,12 @@ namespace DBMSApi.Controllers
             var recipe = new Recipe()
             {
                 recipeName = data.name,
-                link = data.link,
                 description = data.description,
             };
 
-            // Get list of ids for comparison
-            var ingredientIDList = data.ingredientIds.ConvertAll(d => d.ingredientId);
-
-            var ingredients = _db.ingredients.Where(e => ingredientIDList.Contains(e.ingredientId));
-            
-            if (ingredients.Count() > data.ingredientIds.Count)
-            {
-                return NotFound("Unable to verify ingredient ids");
-            }
-
-            // Add to DB so we get an ID
             _db.Add(recipe);
             _db.SaveChanges();
 
-            foreach (var ingredient in data.ingredientIds)
-            {
-                _db.recipeIngredients.Add(new RecipeIngredient()
-                {
-                    ingredientId = ingredient.ingredientId,
-                    recipeId = recipe.recipeId,
-                    ingredientAmount = ingredient.amount,
-                    ingredientUnit = ingredient.ingredientUnit,
-                });
-            }
-
-            _db.SaveChanges();
             return Ok(recipe);
         }
 
@@ -83,8 +74,8 @@ namespace DBMSApi.Controllers
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns>Modified recipe</returns>
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UpdateRecipeMetadata data)
+        [HttpPost("{id}")]
+        public IActionResult updateRecipeMetaData(int id, [FromBody] UpdateRecipeMetadata data)
         {
             var recipe = _db.recipes.Find(id);
 
@@ -95,7 +86,6 @@ namespace DBMSApi.Controllers
 
             recipe.recipeName = data.name == null ? recipe.recipeName : data.name;
             recipe.description = data.description == null ? recipe.description : data.description;
-            recipe.link = data.link == null ? recipe.link : data.link;
 
             _db.SaveChanges();
             return Ok(recipe);
@@ -107,20 +97,26 @@ namespace DBMSApi.Controllers
         /// <param name="recipeId"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        [HttpPost("/addingredient/{recipeId}")]
+        [HttpPost("addingredient/{recipeId}")]
         public IActionResult addIngredient(int recipeId, [FromBody] AddIngredientToRecipeViewModel data)
         {
             var recipe = _db.recipes.Find(recipeId);
+            var ingredient = _db.ingredients.Find(data.ingredientId);
 
             if (recipe == null)
             {
                 return NotFound("Recipe not found");
             }
 
+            if (ingredient == null)
+            {
+                return NotFound("Ingredient Not Found");
+            }
+
             var recipeIngredient = new RecipeIngredient()
             {
-                recipeId = recipeId,
-                ingredientId = data.ingredientId,
+                recipe = recipe,
+                ingredient = ingredient,
                 ingredientAmount = data.amount,
                 ingredientUnit = data.unit
             };
@@ -128,6 +124,21 @@ namespace DBMSApi.Controllers
             _db.recipeIngredients.Add(recipeIngredient);
             _db.SaveChanges();
 
+            return Ok();
+        }
+
+        [HttpDelete("removeIngredient/{recipeId}/{ingredientId}")]
+        public IActionResult removeIngredient(int recipeId, int ingredientId)
+        {
+            var recipeIngredient = _db.recipeIngredients.Where(x => x.recipeId == recipeId && x.ingredientId == ingredientId).FirstOrDefault();
+
+            if (recipeIngredient == null)
+            {
+                return NotFound("Ingredient Not Found");
+            }
+
+            _db.recipeIngredients.Remove(recipeIngredient);
+            _db.SaveChanges();
             return Ok();
         }
 
@@ -146,27 +157,18 @@ namespace DBMSApi.Controllers
                 return NotFound("Recipe not found");
             }
 
+            _db.Entry(recipe).Collection(x => x.recipeIngredients).Load();
+
             // Find recipe ingredients
             foreach (var ingredient in recipe.recipeIngredients)
             {
                 _db.recipeIngredients.Remove(ingredient);
             }
 
+            _db.recipes.Remove(recipe);
+
             _db.SaveChanges();
             return Ok();
-        }
-
-        [HttpGet("/recipe/{id}")]
-        public IActionResult getIngredients(int id)
-        {
-            var data = _db.recipeIngredients.Where(e => e.recipeId == id); 
-            
-            if (data == null)
-            {
-                return NotFound("Couldn't Find Ingredients");
-            }
-
-            return Ok(data);
         }
     }
 }

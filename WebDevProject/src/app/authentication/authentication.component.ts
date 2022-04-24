@@ -18,4 +18,8 @@ export class AuthenticationComponent implements OnInit {
   getUsername(): string {
     return this.api.username;
   }
+
+  signOut() {
+    this.api.signOut();
+  }
 }

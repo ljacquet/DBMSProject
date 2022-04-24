@@ -10,7 +10,7 @@
         public virtual House house { get; set; }
 
         // roomate ingredient connection
-        public virtual ICollection<Ingredient> ingredients { get; set; }
-        public virtual ICollection<RoomateIngredient> roomateIngredients { get; set; }
+        public ICollection<Ingredient> ingredients { get; set; }
+        public List<RoomateIngredient> roomateIngredients { get; set; }
     }
 }
