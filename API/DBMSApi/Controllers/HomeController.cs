@@ -155,13 +155,13 @@ namespace DBMSApi.Controllers
         [HttpGet("ingredients/{houseId}")]
         public async Task<IActionResult> getHouseIngredients(int houseId)
         {
-            var roomates = dbmsContext.roomates.Where(x => x.houseId == houseId)
+            var roomateIds = dbmsContext.roomates.Where(x => x.houseId == houseId)
+                .Select(x => x.roomateId)
                 .ToList();
-
-            var roomateIds = roomates.ConvertAll(x => x.roomateId);
 
             var roomateIngredients = dbmsContext.roomateIngredients.Where(x => roomateIds.Contains(x.roomateId)).OrderBy(x => x.ingredientId);
 
+            // Avoid issue of circular dependencies by creating response object
             var ingredientsResp = new List<IngredientResponseModel>(roomateIngredients.Count());
             foreach (var roomateIngredient in roomateIngredients)
             {
@@ -183,57 +183,81 @@ namespace DBMSApi.Controllers
         [HttpGet("possiblerecipes/{id}")]
         public async Task<IActionResult> getPossibleRecipes(int id)
         {
-            var roomates = dbmsContext.roomates.Where(x => x.houseId == id).Select(x => x.roomateId).ToList();
+            // Get list of roomateids within house
+            var roomateIds = dbmsContext.roomates
+                .Where(x => x.houseId == id)
+                .Select(x => x.roomateId).ToList();
 
-            if (roomates.Count() == 0)
+            if (roomateIds.Count <= 0)
             {
-                return NotFound();
+                return NotFound("No Roomates");
             }
 
-            // Get all recipes that we have at least one ingredient
-            var roomateIngredients = dbmsContext.roomateIngredients
-                .Where(x => roomates.Contains(x.roomateId));
+            // Get recipes where count of total ingredients equals count of the join of roomateIngredients and total ingredients
+            var recipes = dbmsContext.recipes.Where(r =>
+                r.recipeIngredients.Count == // Total Ingredients
+                    r.recipeIngredients.Join(
+                        dbmsContext.roomateIngredients.Where(roomI => roomateIds.Contains(roomI.roomateId)).Select(x => new { x.roomateId, x.ingredientId }), // get roomate ingredients for house
+                        recipeI => recipeI.ingredientId,
+                        roomateI => roomateI.ingredientId,
+                        (recipeI, roomateI) => recipeI.recipeId)
+                    .Count()
+            ).Select(x => new { x.recipeId, x.recipeName, x.description });
 
-            var recipeIngredients = roomateIngredients
-                .Join(dbmsContext.recipeIngredients, ri => ri.ingredientId, r => r.ingredientId, (ri, r) => r.recipeId);
+            return Ok(recipes);
 
-            // Get all recipes from our recipe ingredients
-            var recipes = dbmsContext.recipes.Where(x => recipeIngredients.Contains(x.recipeId));
+            /* OLD SOLUTION, used C# and multiple queries instead of more complicated Linq. */
+            //var roomates = dbmsContext.roomates.Where(x => x.houseId == id).Select(x => x.roomateId).ToList();
 
-            // Create object to store response
-            var responseObject = new List<object>();
+            //if (roomates.Count() == 0)
+            //{
+            //    return NotFound();
+            //}
 
-            // Get list of roomate ingredient ids
-            var ingredientIds = roomateIngredients.Select(x => x.ingredientId);
+            //// Get all recipes that we have at least one ingredient
+            //var roomateIngredients = dbmsContext.roomateIngredients
+            //    .Where(x => roomates.Contains(x.roomateId));
 
-            foreach (var recipe in recipes)
-            {
-                // Load recipe ingredients
-                dbmsContext.Entry(recipe).Collection(r => r.ingredients).Load();
+            //var recipeIngredients = roomateIngredients
+            //    .Join(dbmsContext.recipeIngredients, ri => ri.ingredientId, r => r.ingredientId, (ri, r) => r.recipeId);
 
-                var ingredientCount = 0;
+            //// Get all recipes from our recipe ingredients
+            //var recipes = dbmsContext.recipes.Where(x => recipeIngredients.Contains(x.recipeId));
 
-                // Find out how many matching ingredients they have
-                foreach (var ingredient in recipe.ingredients)
-                {
-                    if (ingredientIds.Contains(ingredient.ingredientId))
-                    {
-                        ingredientCount++;
-                    }
-                }
+            //// Create object to store response
+            //var responseObject = new List<object>();
 
-                // If they have all ingredients add to response
-                if (ingredientCount == recipe.ingredients.Count())
-                {
-                    responseObject.Add(new { 
-                        recipeId = recipe.recipeId,
-                        recipeName = recipe.recipeName,
-                        recipeDescription = recipe.description
-                    });
-                }
-            }
+            //// Get list of roomate ingredient ids
+            //var ingredientIds = roomateIngredients.Select(x => x.ingredientId);
 
-            return Ok(responseObject);
+            //foreach (var recipe in recipes)
+            //{
+            //    // Load recipe ingredients
+            //    dbmsContext.Entry(recipe).Collection(r => r.ingredients).Load();
+
+            //    var ingredientCount = 0;
+
+            //    // Find out how many matching ingredients they have
+            //    foreach (var ingredient in recipe.ingredients)
+            //    {
+            //        if (ingredientIds.Contains(ingredient.ingredientId))
+            //        {
+            //            ingredientCount++;
+            //        }
+            //    }
+
+            //    // If they have all ingredients add to response
+            //    if (ingredientCount == recipe.ingredients.Count())
+            //    {
+            //        responseObject.Add(new { 
+            //            recipeId = recipe.recipeId,
+            //            recipeName = recipe.recipeName,
+            //            recipeDescription = recipe.description
+            //        });
+            //    }
+            //}
+
+            //return Ok(responseObject);
         }
     }
 }
